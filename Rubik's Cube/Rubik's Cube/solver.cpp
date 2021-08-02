@@ -1098,6 +1098,7 @@ void beginnersMethod(Cube &c) {
 	c.displayCube();
 	cout << "STEP 3: To solve the final layer:" << endl;
 	solveFinal(c);
+	c.displayCube();
 	cout << endl << endl;
 	if (c.isSolved()) {
 		cout << "Your cube is solved." << endl << endl;
@@ -1112,89 +1113,6 @@ void inputSolvedCube(Cube &c) {
 	c.set(4, 3, 3, 3, 3); // back
 	c.set(2, 4, 4, 4, 4); // left
 	c.set(5, 5, 5, 5, 5); // down
-}
-
-void generateTestCube(Cube &c) {
-	cout << "Generating a test cube..." << endl;
-	inputSolvedCube(c);
-	/* Perform 20 random turns to scramble the cube */
-	int turn;
-	cout << "Turns from solved cube: ";
-	for (int i = 0; i < rand() % 30 + 10; ++i) {
-		turn = rand() % 18; // 18 possible turns
-		switch (turn) {
-		case 0: c.U(); break;
-		case 1: c.Up(); break;
-		case 2: c.U2(); break;
-		case 3: c.R(); break;
-		case 4: c.Rp(); break;
-		case 5: c.R2(); break;
-		case 6: c.L(); break;
-		case 7: c.Lp(); break;
-		case 8: c.L2(); break;
-		case 9: c.F(); break;
-		case 10: c.Fp(); break;
-		case 11: c.F2(); break;
-		case 12: c.B(); break;
-		case 13: c.Bp(); break;
-		case 14: c.B2(); break;
-		case 15: c.D(); break;
-		case 16: c.Dp(); break;
-		case 17: c.D2(); break;
-		default: cout << "This should not be possible." << flush; exit(10);
-		}
-	}
-
-	c.displayCube();
-}
-
-void testbench(Cube &c) {
-	cout << "Running test bench... " << endl;
-	srand(time(NULL));
-	int passed = 0;
-	int timesum = 0;
-	int testno = 1000;
-	clock_t tbt = clock();
-	clock_t max = 0;
-	for (int i = 0; i < testno; ++i) {
-		clock_t t;
-
-		errorsig = false;
-		generateTestCube(c);
-		try {
-			t = clock(); // start stopwatch
-			beginnersMethod(c);
-		}
-		catch (string error) {
-			errorsig = true;
-			cout << endl << error << endl;
-		}
-		catch (char* error) {
-			errorsig = true;
-			cout << endl << error << endl;
-		}
-		catch (...) {
-			errorsig = true;
-			cout << "Unknown error. Aborting program..." << endl;
-			system("pause");
-			exit(99);
-		}
-		int elapsed = clock() - t; // end stopwatch
-		if (errorsig) {
-			cout << "Test " << i+1 << ": FAILED ***************************************************" << endl;
-		}
-		else {
-			cout << "Test " << i+1 << ": PASSED" << endl;
-			passed++;
-			timesum += elapsed;
-			if (elapsed > max) max = elapsed;
-		}
-		cout << endl << endl << "------------------------------------" << endl;
-	}
-	cout << passed << "/" << testno << " tests passed." << endl;
-	cout << "Average time to compute solution: " << timesum / passed << " ms" << endl;
-	cout << "Max time to compute solution: " << max << " ms" << endl;
-	cout << "Test bench took " << (clock() - tbt)*1.0/CLOCKS_PER_SEC << " s to complete." << endl;
 }
 
 void inputCube(Cube &c) {
@@ -1337,9 +1255,7 @@ int main() {
 
 	/* Enter loop */
 	while (true) {
-		/* To test the program */
-		//testbench(c); /* UNCOMMENT TO RUN TEST BENCH */
-
+		
 		/* Input cube data */
 		inputCube(c);
 
